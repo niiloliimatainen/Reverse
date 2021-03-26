@@ -26,12 +26,14 @@ int read_lines(struct lines **line, FILE *stream) {
 			lp->prev = lp->next = NULL;
 		
 		} else {
+
 			if ((lp->next = malloc(sizeof(struct lines))) == NULL) {
 				fprintf(stderr, "ERROR: could not allocate memory\n");
 				return -1;
 			}
 			lp->next->prev = lp;
 			lp = lp->next;
+			lp->next = NULL;
 		}
 
 		if ((lp->string = malloc(strlen(tmp) + 1)) == NULL) {
@@ -46,22 +48,18 @@ int read_lines(struct lines **line, FILE *stream) {
 }
 
 
-/*Function to write lines from linked list in reverse order to the output stream*/
+/*Function to write lines from doubly linked list in reverse order to the output stream*/
 void write_lines(struct lines *line, FILE *stream) {
 	struct lines *lp;
 	lp = line;
-	/*Reversing a doubly linked list*/
-	while (lp != NULL) {
-		line = lp->prev;
-		lp->prev = lp->next;
-		lp->next = line;
-		lp = lp->prev;
+	/*Going to the end of the doubly linked list*/
+	while (lp->next != NULL) {
+		lp = lp->next;
 	}
-	/*Writing lines from the reversed list to the output stream*/
-	lp = line->prev;
+	/*Writing the doubly linked list in reverse order to the output stream*/
 	while (lp != NULL) {
 		fprintf(stream, "%s", lp->string);
-		lp = lp->next;
+		lp = lp->prev;
 	}
 }
 
@@ -80,7 +78,7 @@ void delete_lines(struct lines *line) {
 
 
 int main(int argc, char **argv) { 
-	/*IF argc = 1 read from stdin and write to stdout*/
+	/*IF argc = 1 -> read from stdin and write to stdout*/
 	/*IF argc = 2 -> user gives inputfile which prints to screen <stdout>*/
 	/*IF argc = 3 -> same thing as 2, but writes to provided file instead of stdout*/
 	/*IF ELSE be mad and crash*/
@@ -133,7 +131,7 @@ int main(int argc, char **argv) {
 		fclose(output);
 
 	} else {
-		printf("Wrong amount of arguments!\n Usage: reverse <optional inputfile.txt> <optional outputfile.txt>");
+		printf("Wrong amount of arguments!\n Usage: reverse <optional inputfile.txt> <optional outputfile.txt>\n");
 		exit(1);
 	}
 
