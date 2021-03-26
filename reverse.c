@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
 		fclose(output);
 
 	} else {
-		printf("Wrong amount of arguments!\n Usage: reverse <optional inputfile.txt> <optional outputfile.txt>\n");
+		fprintf(stderr, "Wrong amount of arguments!\n Usage: reverse <optional inputfile.txt> <optional outputfile.txt>\n");
 		exit(1);
 	}
 
